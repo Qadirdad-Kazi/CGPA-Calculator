@@ -1,4 +1,3 @@
-// frontend/src/pages/Dashboard.js
 import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import {
@@ -12,6 +11,8 @@ import {
   Grid,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+// Import the API_URL from your config file:
+import { API_URL } from './config';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -20,13 +21,12 @@ function Dashboard() {
   const [creditHours, setCreditHours] = useState('');
   const [gpa, setGpa] = useState('');
   const [cgpa, setCgpa] = useState(null);
-
   const token = localStorage.getItem('token');
 
-  // Memoize fetchCourses so it can be safely used as a dependency in useEffect
+  // Memoize fetchCourses for useEffect dependencies
   const fetchCourses = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/courses', {
+      const res = await axios.get(`${API_URL}/api/courses`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCourses(res.data.courses);
@@ -60,7 +60,7 @@ function Dashboard() {
 
     try {
       await axios.post(
-        'http://localhost:5000/api/courses',
+        `${API_URL}/api/courses`,
         {
           courseName,
           creditHours: parsedCreditHours,
@@ -83,7 +83,7 @@ function Dashboard() {
   // Delete a course by its _id
   const deleteCourse = async (courseId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/courses/${courseId}`, {
+      await axios.delete(`${API_URL}/api/courses/${courseId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       // Refresh the course list after deletion
@@ -100,14 +100,8 @@ function Dashboard() {
       setCgpa(null);
       return;
     }
-    const totalCreditHours = courses.reduce(
-      (sum, course) => sum + course.creditHours,
-      0
-    );
-    const totalGradePoints = courses.reduce(
-      (sum, course) => sum + course.gradePoints,
-      0
-    );
+    const totalCreditHours = courses.reduce((sum, course) => sum + course.creditHours, 0);
+    const totalGradePoints = courses.reduce((sum, course) => sum + course.gradePoints, 0);
     if (totalCreditHours === 0) {
       setCgpa(null);
       return;
@@ -176,9 +170,7 @@ function Dashboard() {
                         paddingBottom: 1,
                       }}
                     >
-                      <Typography variant="subtitle1">
-                        {course.courseName}
-                      </Typography>
+                      <Typography variant="subtitle1">{course.courseName}</Typography>
                       <Typography variant="body2">
                         Credit Hours: {course.creditHours}
                       </Typography>
@@ -203,9 +195,7 @@ function Dashboard() {
                     </Box>
                   ))
                 ) : (
-                  <Typography variant="body2">
-                    No courses added yet.
-                  </Typography>
+                  <Typography variant="body2">No courses added yet.</Typography>
                 )}
               </Box>
             </Grid>
