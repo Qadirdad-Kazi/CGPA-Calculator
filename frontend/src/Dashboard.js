@@ -1,5 +1,5 @@
 // frontend/src/pages/Dashboard.js
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import {
   Container,
@@ -23,16 +23,8 @@ function Dashboard() {
 
   const token = localStorage.getItem('token');
 
-  useEffect(() => {
-    if (!token) {
-      navigate('/');
-      return;
-    }
-    fetchCourses();
-  }, [token, navigate]);
-
-  // Fetch all courses for the user
-  const fetchCourses = async () => {
+  // Memoize fetchCourses so it can be safely used as a dependency in useEffect
+  const fetchCourses = useCallback(async () => {
     try {
       const res = await axios.get('http://localhost:5000/api/courses', {
         headers: { Authorization: `Bearer ${token}` },
@@ -41,7 +33,15 @@ function Dashboard() {
     } catch (error) {
       console.error('Error fetching courses:', error);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/');
+      return;
+    }
+    fetchCourses();
+  }, [token, navigate, fetchCourses]);
 
   // Add a new course
   const addCourse = async () => {
