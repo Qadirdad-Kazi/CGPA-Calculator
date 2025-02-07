@@ -1,4 +1,3 @@
-// backend/routes/courses.js
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
@@ -48,7 +47,7 @@ router.post('/', authMiddleware, async (req, res) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // find user and push new course
+    // Find user and push new course
     const user = await User.findById(req.userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -62,9 +61,26 @@ router.post('/', authMiddleware, async (req, res) => {
 
     await user.save();
 
-    return res
-      .status(201)
-      .json({ message: 'Course added successfully' });
+    return res.status(201).json({ message: 'Course added successfully' });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+// DELETE a course by its _id
+router.delete('/:id', authMiddleware, async (req, res) => {
+  try {
+    // Find the user by the ID attached by authMiddleware
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    // Remove the course with the matching _id from the courses array
+    user.courses = user.courses.filter(
+      (course) => course._id.toString() !== req.params.id
+    );
+    await user.save();
+    return res.json({ message: 'Course deleted successfully' });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

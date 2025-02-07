@@ -9,6 +9,7 @@ import {
   Box,
   TextField,
   Button,
+  Grid,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,152 +18,198 @@ function Dashboard() {
   const [courses, setCourses] = useState([]);
   const [courseName, setCourseName] = useState('');
   const [creditHours, setCreditHours] = useState('');
-  const [gradePoints, setGradePoints] = useState('');
+  const [gpa, setGpa] = useState('');
   const [cgpa, setCgpa] = useState(null);
 
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    // If no token, redirect to login
     if (!token) {
       navigate('/');
       return;
     }
-
-    // Fetch user courses
-    const fetchCourses = async () => {
-      try {
-        const res = await axios.get('http://localhost:5000/api/courses', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setCourses(res.data.courses);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     fetchCourses();
   }, [token, navigate]);
 
-  // Calculate CGPA from stored courses
-  const calculateCGPA = () => {
-    let totalCredits = 0;
-    let totalGradePoints = 0;
-
-    courses.forEach((course) => {
-      totalCredits += course.creditHours;
-      totalGradePoints += course.gradePoints;
-    });
-
-    if (totalCredits === 0) {
-      setCgpa(null);
-      return;
+  // Fetch all courses for the user
+  const fetchCourses = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/courses', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCourses(res.data.courses);
+    } catch (error) {
+      console.error('Error fetching courses:', error);
     }
-
-    const currentCgpa = totalGradePoints / totalCredits;
-    setCgpa(currentCgpa.toFixed(2));
   };
 
   // Add a new course
   const addCourse = async () => {
-    if (!courseName || !creditHours || !gradePoints) {
+    if (!courseName || !creditHours || !gpa) {
       alert('Please fill out all fields');
       return;
     }
+    const parsedCreditHours = parseFloat(creditHours);
+    const parsedGpa = parseFloat(gpa);
+    if (isNaN(parsedCreditHours) || isNaN(parsedGpa)) {
+      alert('Credit Hours and GPA must be valid numbers');
+      return;
+    }
+    // Calculate grade points for this course
+    const computedGradePoints = parsedCreditHours * parsedGpa;
 
     try {
       await axios.post(
         'http://localhost:5000/api/courses',
         {
           courseName,
-          creditHours,
-          gradePoints,
+          creditHours: parsedCreditHours,
+          gradePoints: computedGradePoints,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      // Clear fields
+      // Clear form inputs
       setCourseName('');
       setCreditHours('');
-      setGradePoints('');
-
-      // Refetch the courses
-      const res = await axios.get('http://localhost:5000/api/courses', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setCourses(res.data.courses);
+      setGpa('');
+      // Refresh courses list
+      fetchCourses();
     } catch (error) {
-      console.error(error);
+      console.error('Error adding course:', error);
+      alert('Error adding course');
     }
   };
 
+  // Delete a course by its _id
+  const deleteCourse = async (courseId) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/courses/${courseId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      // Refresh the course list after deletion
+      fetchCourses();
+    } catch (error) {
+      console.error('Error deleting course:', error);
+      alert('Error deleting course');
+    }
+  };
+
+  // Calculate cumulative CGPA from all courses
+  const calculateCGPA = () => {
+    if (courses.length === 0) {
+      setCgpa(null);
+      return;
+    }
+    const totalCreditHours = courses.reduce(
+      (sum, course) => sum + course.creditHours,
+      0
+    );
+    const totalGradePoints = courses.reduce(
+      (sum, course) => sum + course.gradePoints,
+      0
+    );
+    if (totalCreditHours === 0) {
+      setCgpa(null);
+      return;
+    }
+    const computedCgpa = totalGradePoints / totalCreditHours;
+    setCgpa(computedCgpa.toFixed(2));
+  };
+
   return (
-    <Container maxWidth="sm" sx={{ marginTop: 4 }}>
-      <Card variant="outlined" sx={{ padding: 2 }}>
+    <Container maxWidth="md" sx={{ marginTop: 4 }}>
+      <Card variant="outlined">
         <CardContent>
           <Typography variant="h5" gutterBottom>
             Dashboard
           </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 2,
-              marginBottom: 3,
-            }}
-          >
-            <TextField
-              label="Course Name"
-              value={courseName}
-              onChange={(e) => setCourseName(e.target.value)}
-            />
-            <TextField
-              label="Credit Hours"
-              type="number"
-              value={creditHours}
-              onChange={(e) => setCreditHours(e.target.value)}
-            />
-            <TextField
-              label="Grade Points"
-              type="number"
-              value={gradePoints}
-              onChange={(e) => setGradePoints(e.target.value)}
-            />
-            <Button variant="contained" onClick={addCourse}>
-              Add Course
-            </Button>
-          </Box>
-
-          <Button variant="contained" color="secondary" onClick={calculateCGPA}>
-            Calculate CGPA
-          </Button>
-
-          {cgpa && (
-            <Typography variant="h6" color="primary" sx={{ marginTop: 2 }}>
-              Your CGPA is: {cgpa}
-            </Typography>
-          )}
-
-          {/* Display all courses */}
-          <Typography variant="h6" sx={{ marginTop: 2 }}>
-            Your Courses:
-          </Typography>
-          <Box sx={{ marginTop: 1 }}>
-            {courses.map((course, index) => (
-              <Typography key={index}>
-                {course.courseName} - CH: {course.creditHours}, GP:{' '}
-                {course.gradePoints}
+          <Grid container spacing={4}>
+            {/* Left Column: Course Form & CGPA Calculation */}
+            <Grid item xs={12} md={6}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <TextField
+                  label="Course Name"
+                  value={courseName}
+                  onChange={(e) => setCourseName(e.target.value)}
+                  fullWidth
+                />
+                <TextField
+                  label="Credit Hours"
+                  type="number"
+                  value={creditHours}
+                  onChange={(e) => setCreditHours(e.target.value)}
+                  fullWidth
+                />
+                <TextField
+                  label="GPA"
+                  type="number"
+                  value={gpa}
+                  onChange={(e) => setGpa(e.target.value)}
+                  fullWidth
+                />
+                <Button variant="contained" onClick={addCourse}>
+                  Add Course
+                </Button>
+                <Button variant="contained" color="secondary" onClick={calculateCGPA}>
+                  Calculate CGPA
+                </Button>
+                {cgpa && (
+                  <Typography variant="h6" color="primary">
+                    Cumulative CGPA: {cgpa}
+                  </Typography>
+                )}
+              </Box>
+            </Grid>
+            {/* Right Column: List of Existing Courses with Delete Option */}
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" gutterBottom>
+                Your Courses
               </Typography>
-            ))}
-          </Box>
+              <Box sx={{ maxHeight: '400px', overflowY: 'auto' }}>
+                {courses.length > 0 ? (
+                  courses.map((course) => (
+                    <Box
+                      key={course._id}
+                      sx={{
+                        marginBottom: 1,
+                        borderBottom: '1px solid #ccc',
+                        paddingBottom: 1,
+                      }}
+                    >
+                      <Typography variant="subtitle1">
+                        {course.courseName}
+                      </Typography>
+                      <Typography variant="body2">
+                        Credit Hours: {course.creditHours}
+                      </Typography>
+                      <Typography variant="body2">
+                        GPA:{' '}
+                        {(course.creditHours && course.gradePoints)
+                          ? (course.gradePoints / course.creditHours).toFixed(2)
+                          : '-'}
+                      </Typography>
+                      <Typography variant="body2">
+                        Grade Points: {course.gradePoints}
+                      </Typography>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        size="small"
+                        sx={{ marginTop: 1 }}
+                        onClick={() => deleteCourse(course._id)}
+                      >
+                        Delete
+                      </Button>
+                    </Box>
+                  ))
+                ) : (
+                  <Typography variant="body2">
+                    No courses added yet.
+                  </Typography>
+                )}
+              </Box>
+            </Grid>
+          </Grid>
         </CardContent>
       </Card>
     </Container>
