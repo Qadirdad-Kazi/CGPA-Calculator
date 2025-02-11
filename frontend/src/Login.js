@@ -1,8 +1,8 @@
-// frontend/src/pages/Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { TextField, Button, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from './config'; // Import the API URL
 
 function Login() {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', {
+      const res = await axios.post(`${API_URL}/auth/login`, {
         email,
         password,
       });

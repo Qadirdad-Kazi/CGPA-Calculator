@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import {
   Container,
@@ -11,8 +11,7 @@ import {
   Grid,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-// Import the API_URL from your config file:
-import { API_URL } from './config';
+import { API_URL } from './config'; // Ensure correct API URL import
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -20,28 +19,32 @@ function Dashboard() {
   const [courseName, setCourseName] = useState('');
   const [creditHours, setCreditHours] = useState('');
   const [gpa, setGpa] = useState('');
-  const [cgpa, setCgpa] = useState(null);
   const token = localStorage.getItem('token');
 
-  // Memoize fetchCourses for useEffect dependencies
+  // Redirect to login if no token
+  useEffect(() => {
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+
+  // Fetch courses from API
   const fetchCourses = useCallback(async () => {
     try {
-      const res = await axios.get(`${API_URL}/api/courses`, {
+      const res = await axios.get(`${API_URL}/courses`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setCourses(res.data.courses);
+      setCourses(res.data.courses || []);
     } catch (error) {
       console.error('Error fetching courses:', error);
     }
   }, [token]);
 
   useEffect(() => {
-    if (!token) {
-      navigate('/');
-      return;
+    if (token) {
+      fetchCourses();
     }
-    fetchCourses();
-  }, [token, navigate, fetchCourses]);
+  }, [token, fetchCourses]);
 
   // Add a new course
   const addCourse = async () => {
@@ -49,18 +52,20 @@ function Dashboard() {
       alert('Please fill out all fields');
       return;
     }
+
     const parsedCreditHours = parseFloat(creditHours);
     const parsedGpa = parseFloat(gpa);
+
     if (isNaN(parsedCreditHours) || isNaN(parsedGpa)) {
       alert('Credit Hours and GPA must be valid numbers');
       return;
     }
-    // Calculate grade points for this course
+
     const computedGradePoints = parsedCreditHours * parsedGpa;
 
     try {
       await axios.post(
-        `${API_URL}/api/courses`,
+        `${API_URL}/courses`,
         {
           courseName,
           creditHours: parsedCreditHours,
@@ -68,47 +73,37 @@ function Dashboard() {
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      // Clear form inputs
+
       setCourseName('');
       setCreditHours('');
       setGpa('');
-      // Refresh courses list
       fetchCourses();
     } catch (error) {
       console.error('Error adding course:', error);
-      alert('Error adding course');
+      alert('Failed to add course');
     }
   };
 
-  // Delete a course by its _id
+  // Delete a course
   const deleteCourse = async (courseId) => {
     try {
-      await axios.delete(`${API_URL}/api/courses/${courseId}`, {
+      await axios.delete(`${API_URL}/courses/${courseId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      // Refresh the course list after deletion
       fetchCourses();
     } catch (error) {
       console.error('Error deleting course:', error);
-      alert('Error deleting course');
+      alert('Failed to delete course');
     }
   };
 
-  // Calculate cumulative CGPA from all courses
-  const calculateCGPA = () => {
-    if (courses.length === 0) {
-      setCgpa(null);
-      return;
-    }
+  // Calculate CGPA
+  const cgpa = useMemo(() => {
+    if (courses.length === 0) return null;
     const totalCreditHours = courses.reduce((sum, course) => sum + course.creditHours, 0);
     const totalGradePoints = courses.reduce((sum, course) => sum + course.gradePoints, 0);
-    if (totalCreditHours === 0) {
-      setCgpa(null);
-      return;
-    }
-    const computedCgpa = totalGradePoints / totalCreditHours;
-    setCgpa(computedCgpa.toFixed(2));
-  };
+    return totalCreditHours ? (totalGradePoints / totalCreditHours).toFixed(2) : null;
+  }, [courses]);
 
   return (
     <Container maxWidth="md" sx={{ marginTop: 4 }}>
@@ -144,16 +139,9 @@ function Dashboard() {
                 <Button variant="contained" onClick={addCourse}>
                   Add Course
                 </Button>
-                <Button variant="contained" color="secondary" onClick={calculateCGPA}>
-                  Calculate CGPA
-                </Button>
-                {cgpa && (
-                  <Typography variant="h6" color="primary">
-                    Cumulative CGPA: {cgpa}
-                  </Typography>
-                )}
               </Box>
             </Grid>
+
             {/* Right Column: List of Existing Courses with Delete Option */}
             <Grid item xs={12} md={6}>
               <Typography variant="h6" gutterBottom>
@@ -176,7 +164,7 @@ function Dashboard() {
                       </Typography>
                       <Typography variant="body2">
                         GPA:{' '}
-                        {(course.creditHours && course.gradePoints)
+                        {course.creditHours && course.gradePoints
                           ? (course.gradePoints / course.creditHours).toFixed(2)
                           : '-'}
                       </Typography>
@@ -200,6 +188,15 @@ function Dashboard() {
               </Box>
             </Grid>
           </Grid>
+
+          {/* CGPA Display */}
+          {cgpa && (
+            <Box sx={{ marginTop: 3 }}>
+              <Typography variant="h6" color="primary">
+                Cumulative CGPA: {cgpa}
+              </Typography>
+            </Box>
+          )}
         </CardContent>
       </Card>
     </Container>

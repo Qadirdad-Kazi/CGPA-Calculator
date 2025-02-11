@@ -1,8 +1,8 @@
-// frontend/src/pages/Register.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { TextField, Button, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from './config'; // Import the API URL
 
 function Register() {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ function Register() {
 
   const handleRegister = async () => {
     try {
-      await axios.post('http://localhost:5000/api/auth/register', {
+      await axios.post(`${API_URL}/auth/register`, {
         email,
         password,
       });

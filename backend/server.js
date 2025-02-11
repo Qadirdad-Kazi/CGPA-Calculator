@@ -8,7 +8,13 @@ const coursesRoutes = require('./routes/courses');
 
 const app = express();
 
-app.use(cors());
+// ✅ Fix CORS issue to allow frontend requests
+app.use(cors({
+  origin: "https://your-frontend-netlify-url.netlify.app",  // Replace with actual Netlify URL
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true
+}));
+
 app.use(express.json());
 
 // Mount your routes
@@ -29,13 +35,5 @@ mongoose
   })
   .catch((err) => console.log(err));
 
-// Only run app.listen() locally
-if (process.env.VERCEL_ENV !== 'production') {
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}
-
-// Export the Express app wrapped in a function for Vercel
-module.exports = (req, res) => app(req, res);
+// ✅ Export the app for Vercel deployment
+module.exports = app;
