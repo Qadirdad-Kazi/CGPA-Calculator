@@ -111,18 +111,12 @@ app.get('/api/test', (req, res) => {
   console.log('Test endpoint called');
   res.json({ 
     message: 'Test endpoint working',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    jwtSecretSet: !!process.env.JWT_SECRET
   });
 });
 
-// Root test endpoint (without /api prefix)
-app.get('/test', (req, res) => {
-  console.log('Root test endpoint called');
-  res.json({ 
-    message: 'Root test endpoint working',
-    timestamp: new Date().toISOString()
-  });
-});
+
 
 // Optional: Define a default route
 app.get('/', (req, res) => {

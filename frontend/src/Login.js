@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import api from './api';
-import axios from 'axios';
-import { API_URL } from './config';
 import { 
   TextField, 
   Button, 
@@ -61,10 +59,14 @@ function Login() {
         config: error.config
       });
       
-      if (error.code === 'ERR_NETWORK') {
+      if (error.code === 'ECONNABORTED') {
+        setError('Login request timed out. Please try again.');
+      } else if (error.code === 'ERR_NETWORK') {
         setError('Network error. Please check your connection and try again.');
       } else if (error.response?.status === 401) {
         setError('Invalid email or password. Please try again.');
+      } else if (error.response?.status === 400) {
+        setError(error.response.data?.message || 'Invalid login credentials.');
       } else {
         setError(`Login failed: ${error.message}`);
       }
@@ -79,56 +81,7 @@ function Login() {
     }
   };
 
-  // Test API connection
-  const testConnection = async () => {
-    try {
-      console.log('Testing API connection...');
-      const response = await api.get('/health');
-      console.log('API connection successful:', response.data);
-      alert('API connection successful!');
-    } catch (error) {
-      console.error('API connection failed:', error);
-      alert('API connection failed: ' + error.message);
-    }
-  };
 
-  // Test simple endpoint
-  const testSimple = async () => {
-    try {
-      console.log('Testing simple endpoint...');
-      const response = await api.get('/test');
-      console.log('Simple test successful:', response.data);
-      alert('Simple test successful!');
-    } catch (error) {
-      console.error('Simple test failed:', error);
-      alert('Simple test failed: ' + error.message);
-    }
-  };
-
-  // Debug API URL
-  const debugApiUrl = () => {
-    console.log('=== API URL Debug ===');
-    console.log('API_URL from config:', API_URL);
-    console.log('api.defaults.baseURL:', api.defaults.baseURL);
-    console.log('Full health URL would be:', api.defaults.baseURL + '/health');
-    console.log('Full test URL would be:', api.defaults.baseURL + '/test');
-    console.log('=====================');
-    alert('Check console for API URL debug info');
-  };
-
-  // Test root endpoint (without /api)
-  const testRoot = async () => {
-    try {
-      console.log('Testing root endpoint...');
-      const baseUrl = API_URL.replace('/api', '');
-      const response = await axios.get(`${baseUrl}/test`);
-      console.log('Root test successful:', response.data);
-      alert('Root test successful!');
-    } catch (error) {
-      console.error('Root test failed:', error);
-      alert('Root test failed: ' + error.message);
-    }
-  };
 
   return (
     <Box sx={{ 
@@ -184,39 +137,7 @@ function Login() {
             </Alert>
           )}
 
-          {/* Test Connection Buttons */}
-          <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-            <Button
-              variant="outlined"
-              onClick={testConnection}
-              sx={{ flex: 1 }}
-            >
-              Test Health
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={testSimple}
-              sx={{ flex: 1 }}
-            >
-              Test Simple
-            </Button>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-            <Button
-              variant="outlined"
-              onClick={debugApiUrl}
-              sx={{ flex: 1 }}
-            >
-              Debug API URL
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={testRoot}
-              sx={{ flex: 1 }}
-            >
-              Test Root
-            </Button>
-          </Box>
+
 
           {/* Login Form */}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>

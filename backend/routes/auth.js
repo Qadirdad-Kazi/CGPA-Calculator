@@ -8,7 +8,8 @@ const User = require('../models/User');
 // A secret key for JWT (must be set via environment)
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
-  console.warn('JWT_SECRET is not set. Please configure it in your environment.');
+  console.error('JWT_SECRET is not set. Please configure it in your environment.');
+  console.error('Login will fail without a JWT secret.');
 }
 
 // REGISTER
@@ -46,12 +47,15 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     console.log('Login attempt for email:', req.body.email);
+    const startTime = Date.now();
     const { email, password } = req.body;
 
     if (!email || !password) {
+      console.log('Missing email or password');
       return res.status(400).json({ message: 'Email and password are required' });
     }
 
+    console.log('Looking up user in database...');
     // find user
     const user = await User.findOne({ email });
     if (!user) {
@@ -61,6 +65,7 @@ router.post('/login', async (req, res) => {
         .json({ message: 'Invalid email or password' });
     }
 
+    console.log('User found, comparing password...');
     // compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
@@ -70,12 +75,14 @@ router.post('/login', async (req, res) => {
         .json({ message: 'Invalid email or password' });
     }
 
+    console.log('Password matched, creating token...');
     // create token
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
       expiresIn: '1h',
     });
 
-    console.log('Login successful for user:', email);
+    const endTime = Date.now();
+    console.log(`Login successful for user: ${email} (took ${endTime - startTime}ms)`);
     return res.status(200).json({ token, email: user.email });
   } catch (error) {
     console.error('Login error:', error);
