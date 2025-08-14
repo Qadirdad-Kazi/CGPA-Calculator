@@ -1,70 +1,158 @@
-# Getting Started with Create React App
+# CGPA Calculator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, user-friendly web application for calculating and tracking Cumulative Grade Point Average (CGPA) with a beautiful, responsive design.
+
+## Features
+
+- **Modern UI/UX**: Beautiful gradient design with glass morphism effects
+- **Easy CGPA Calculation**: Intuitive interface for accurate grade point calculations
+- **Progress Tracking**: Monitor academic performance over time
+- **Course Management**: Organize courses, grades, and credits efficiently
+- **Personal Dashboard**: Access personalized analytics and insights
+- **Responsive Design**: Works seamlessly on all devices
+- **Secure Authentication**: Protected user accounts with JWT tokens
+
+## Tech Stack
+
+### Frontend
+- React.js with Material-UI components
+- Modern CSS with animations and transitions
+- Responsive design for mobile and desktop
+- Beautiful gradient themes and glass morphism effects
+
+### Backend
+- Node.js with Express.js
+- MongoDB for data persistence
+- JWT authentication
+- RESTful API endpoints
+
+## Getting Started
+
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn package manager
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/CGPA-Calculator.git
+cd CGPA-Calculator
+```
+
+2. Install backend dependencies:
+```bash
+cd backend
+npm install
+```
+
+3. Install frontend dependencies:
+```bash
+cd ../frontend
+npm install
+```
+
+4. Set up environment variables:
+   - Create a `.env` file in the backend directory
+   - Add your MongoDB connection string and JWT secret
+
+5. Start the backend server:
+```bash
+cd backend
+npm start
+```
+
+6. Start the frontend development server:
+```bash
+cd frontend
+npm start
+```
+
+7. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ## Available Scripts
 
-In the project directory, you can run:
+### Frontend
+- `npm start` - Runs the app in development mode
+- `npm test` - Launches the test runner
+- `npm run build` - Builds the app for production
+- `npm run eject` - Ejects from Create React App
 
-### `npm start`
+### Backend
+- `npm start` - Starts the production server
+- `npm run dev` - Starts the development server with nodemon
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Project Structure
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```
+CGPA-Calculator/
+├── frontend/                 # React frontend application
+│   ├── src/
+│   │   ├── components/      # React components
+│   │   ├── pages/          # Page components (Home, Login, Register, About)
+│   │   ├── styles/         # CSS and styling files
+│   │   └── utils/          # Utility functions and configurations
+│   └── public/             # Static assets
+├── backend/                 # Node.js backend server
+│   ├── models/             # Database models
+│   ├── routes/             # API route handlers
+│   ├── middleware/         # Custom middleware
+│   └── server.js           # Main server file
+└── README.md               # Project documentation
+```
 
-### `npm test`
+## Key Pages
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Home Page
+- Landing page with feature highlights
+- Call-to-action buttons for registration and login
+- Responsive design with beautiful animations
 
-### `npm run build`
+### Login Page
+- Modern authentication interface
+- Form validation and error handling
+- Smooth transitions and hover effects
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Register Page
+- User registration with password confirmation
+- Input validation and success feedback
+- Consistent design with login page
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### About Page
+- Comprehensive information about the application
+- Feature explanations and how-to guides
+- Team information and mission statement
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Dashboard
+- Personal CGPA tracking and analytics
+- Course management interface
+- Performance insights and progress charts
 
-### `npm run eject`
+## Design Features
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Gradient Backgrounds**: Beautiful purple-blue gradients throughout the app
+- **Glass Morphism**: Modern translucent card designs with backdrop blur
+- **Smooth Animations**: CSS transitions and keyframe animations
+- **Responsive Layout**: Mobile-first design approach
+- **Material Design**: Consistent with Material-UI design principles
+- **Custom Icons**: Meaningful iconography for better user experience
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Contributing
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## License
 
-## Learn More
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Support
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+For support and questions, please open an issue in the GitHub repository or contact the development team.
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Built with ❤️ for students worldwide**
