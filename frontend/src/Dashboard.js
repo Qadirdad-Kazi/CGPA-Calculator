@@ -137,7 +137,7 @@ function Dashboard() {
   const deleteCourse = async (courseId) => {
     try {
       setLoading(true);
-      await axios.delete(`${API_URL}/courses/${courseId}`, {
+      await axios.delete(`${API_URL}/api/courses/${courseId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchCourses();
