@@ -10,7 +10,7 @@ const app = express();
 
 // ✅ Fix CORS issue to allow frontend requests
 app.use(cors({
-  origin: "https://kazicgpacalculator.netlify.app",  // Replace with actual Netlify URL
+  origin: "https://cgpa.qadirdadkazi.com",  // Replace with actual Netlify URL
   methods: "GET,POST,PUT,DELETE",
   credentials: true
 }));
