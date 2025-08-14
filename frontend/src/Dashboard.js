@@ -59,9 +59,7 @@ function Dashboard() {
   const fetchCourses = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await api.get('/courses', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get('/courses');
       setCourses(res.data.courses || []);
     } catch (error) {
       console.error('Error fetching courses:', error);
@@ -69,7 +67,7 @@ function Dashboard() {
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     if (token) {
@@ -109,15 +107,11 @@ function Dashboard() {
 
     try {
       setLoading(true);
-              await api.post(
-          '/courses',
-        {
-          courseName,
-          creditHours: parsedCreditHours,
-          gradePoints: computedGradePoints,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.post('/courses', {
+        courseName,
+        creditHours: parsedCreditHours,
+        gradePoints: computedGradePoints,
+      });
 
       setCourseName('');
       setCreditHours('');
@@ -137,9 +131,7 @@ function Dashboard() {
   const deleteCourse = async (courseId) => {
     try {
       setLoading(true);
-              await api.delete(`/courses/${courseId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.delete(`/courses/${courseId}`);
       fetchCourses();
       showSnackbar('Course deleted successfully!');
     } catch (error) {
