@@ -54,7 +54,7 @@ function Register() {
     setSuccess('');
 
     try {
-      await axios.post(`${API_URL}/api/auth/register`, {
+      await axios.post(`${API_URL}/auth/register`, {
         email,
         password,
       });

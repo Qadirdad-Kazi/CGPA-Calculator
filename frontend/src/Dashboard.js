@@ -59,7 +59,7 @@ function Dashboard() {
   const fetchCourses = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${API_URL}/api/courses`, {
+      const res = await axios.get(`${API_URL}/courses`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCourses(res.data.courses || []);
@@ -110,7 +110,7 @@ function Dashboard() {
     try {
       setLoading(true);
       await axios.post(
-        `${API_URL}/api/courses`,
+        `${API_URL}/courses`,
         {
           courseName,
           creditHours: parsedCreditHours,
@@ -137,7 +137,7 @@ function Dashboard() {
   const deleteCourse = async (courseId) => {
     try {
       setLoading(true);
-      await axios.delete(`${API_URL}/api/courses/${courseId}`, {
+      await axios.delete(`${API_URL}/courses/${courseId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchCourses();
