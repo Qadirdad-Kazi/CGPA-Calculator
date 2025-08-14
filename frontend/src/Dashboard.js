@@ -110,7 +110,7 @@ function Dashboard() {
     try {
       setLoading(true);
       await axios.post(
-        `${API_URL}/courses`,
+        `${API_URL}/api/courses`,
         {
           courseName,
           creditHours: parsedCreditHours,
