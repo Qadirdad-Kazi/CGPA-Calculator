@@ -5,8 +5,11 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-// A secret key for JWT
-const JWT_SECRET = 'YOUR_SECRET_KEY_HERE'; // store in env variable in production
+// A secret key for JWT (must be set via environment)
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.warn('JWT_SECRET is not set. Please configure it in your environment.');
+}
 
 // REGISTER
 router.post('/register', async (req, res) => {
@@ -42,11 +45,17 @@ router.post('/register', async (req, res) => {
 // LOGIN
 router.post('/login', async (req, res) => {
   try {
+    console.log('Login attempt for email:', req.body.email);
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
 
     // find user
     const user = await User.findOne({ email });
     if (!user) {
+      console.log('User not found:', email);
       return res
         .status(400)
         .json({ message: 'Invalid email or password' });
@@ -55,6 +64,7 @@ router.post('/login', async (req, res) => {
     // compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log('Password mismatch for user:', email);
       return res
         .status(400)
         .json({ message: 'Invalid email or password' });
@@ -65,8 +75,10 @@ router.post('/login', async (req, res) => {
       expiresIn: '1h',
     });
 
+    console.log('Login successful for user:', email);
     return res.status(200).json({ token, email: user.email });
   } catch (error) {
+    console.error('Login error:', error);
     return res.status(500).json({ message: error.message });
   }
 });

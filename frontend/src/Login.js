@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from './api';
 import { 
   TextField, 
   Button, 
@@ -20,7 +20,7 @@ import {
   School
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { API_URL } from './config';
+
 
 function Login() {
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ function Login() {
     setError('');
 
     try {
-      const res = await axios.post(`${API_URL}/auth/login`, {
+      const res = await api.post('/auth/login', {
         email,
         password,
       });
@@ -51,8 +51,21 @@ function Login() {
 
       navigate('/dashboard');
     } catch (error) {
-      console.error(error);
-      setError('Invalid email or password. Please try again.');
+      console.error('Login error details:', {
+        message: error.message,
+        code: error.code,
+        response: error.response?.data,
+        status: error.response?.status,
+        config: error.config
+      });
+      
+      if (error.code === 'ERR_NETWORK') {
+        setError('Network error. Please check your connection and try again.');
+      } else if (error.response?.status === 401) {
+        setError('Invalid email or password. Please try again.');
+      } else {
+        setError(`Login failed: ${error.message}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -61,6 +74,32 @@ function Login() {
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       handleLogin();
+    }
+  };
+
+  // Test API connection
+  const testConnection = async () => {
+    try {
+      console.log('Testing API connection...');
+      const response = await api.get('/health');
+      console.log('API connection successful:', response.data);
+      alert('API connection successful!');
+    } catch (error) {
+      console.error('API connection failed:', error);
+      alert('API connection failed: ' + error.message);
+    }
+  };
+
+  // Test simple endpoint
+  const testSimple = async () => {
+    try {
+      console.log('Testing simple endpoint...');
+      const response = await api.get('/test');
+      console.log('Simple test successful:', response.data);
+      alert('Simple test successful!');
+    } catch (error) {
+      console.error('Simple test failed:', error);
+      alert('Simple test failed: ' + error.message);
     }
   };
 
@@ -117,6 +156,24 @@ function Login() {
               {error}
             </Alert>
           )}
+
+          {/* Test Connection Buttons */}
+          <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+            <Button
+              variant="outlined"
+              onClick={testConnection}
+              sx={{ flex: 1 }}
+            >
+              Test Health
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={testSimple}
+              sx={{ flex: 1 }}
+            >
+              Test Simple
+            </Button>
+          </Box>
 
           {/* Login Form */}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>

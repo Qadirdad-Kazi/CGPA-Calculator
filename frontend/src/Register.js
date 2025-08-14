@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from './api';
 import { 
   TextField, 
   Button, 
@@ -20,7 +20,7 @@ import {
   PersonAdd
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { API_URL } from './config';
+
 
 function Register() {
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ function Register() {
     setSuccess('');
 
     try {
-      await axios.post(`${API_URL}/auth/register`, {
+      await api.post('/auth/register', {
         email,
         password,
       });

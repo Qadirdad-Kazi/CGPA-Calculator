@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import axios from 'axios';
+import api from './api';
 import {
   Container,
   Card,
@@ -34,7 +34,7 @@ import {
   
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { API_URL } from './config';
+
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -59,7 +59,7 @@ function Dashboard() {
   const fetchCourses = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${API_URL}/courses`, {
+      const res = await api.get('/courses', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCourses(res.data.courses || []);
@@ -109,8 +109,8 @@ function Dashboard() {
 
     try {
       setLoading(true);
-      await axios.post(
-        `${API_URL}/courses`,
+              await api.post(
+          '/courses',
         {
           courseName,
           creditHours: parsedCreditHours,
@@ -137,7 +137,7 @@ function Dashboard() {
   const deleteCourse = async (courseId) => {
     try {
       setLoading(true);
-      await axios.delete(`${API_URL}/courses/${courseId}`, {
+              await api.delete(`/courses/${courseId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchCourses();
