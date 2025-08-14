@@ -17,7 +17,12 @@ const parsedEnvAllowlist = (process.env.CORS_ALLOWLIST || '')
   .filter(Boolean);
 
 // Always include localhost for local development
-const defaultAllowlist = ['http://localhost:3000'];
+// Also include common domains as fallback if env vars aren't set
+const defaultAllowlist = [
+  'http://localhost:3000',
+  'https://kazicgpacalculator.netlify.app',
+  'https://cgpa.qadirdadkazi.com'
+];
 const allowlist = Array.from(new Set([...defaultAllowlist, ...parsedEnvAllowlist]));
 
 // Build preview regex if provided, otherwise default to Netlify previews for this site name
@@ -29,6 +34,16 @@ try {
   console.warn('Invalid CORS_PREVIEW_REGEX provided. Falling back to no preview regex.');
   previewRegex = null;
 }
+
+// Debug CORS configuration
+console.log('=== CORS Configuration ===');
+console.log('CORS_ALLOWLIST env:', process.env.CORS_ALLOWLIST);
+console.log('Parsed allowlist:', parsedEnvAllowlist);
+console.log('Final allowlist:', allowlist);
+console.log('CORS_PREVIEW_REGEX env:', process.env.CORS_PREVIEW_REGEX);
+console.log('Preview regex source:', previewRegexSource);
+console.log('Preview regex:', previewRegex);
+console.log('========================');
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -96,6 +111,15 @@ app.get('/api/test', (req, res) => {
   console.log('Test endpoint called');
   res.json({ 
     message: 'Test endpoint working',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Root test endpoint (without /api prefix)
+app.get('/test', (req, res) => {
+  console.log('Root test endpoint called');
+  res.json({ 
+    message: 'Root test endpoint working',
     timestamp: new Date().toISOString()
   });
 });

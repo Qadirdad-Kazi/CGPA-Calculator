@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import api from './api';
+import axios from 'axios';
 import { 
   TextField, 
   Button, 
@@ -103,6 +104,31 @@ function Login() {
     }
   };
 
+  // Debug API URL
+  const debugApiUrl = () => {
+    console.log('=== API URL Debug ===');
+    console.log('API_URL from config:', API_URL);
+    console.log('api.defaults.baseURL:', api.defaults.baseURL);
+    console.log('Full health URL would be:', api.defaults.baseURL + '/health');
+    console.log('Full test URL would be:', api.defaults.baseURL + '/test');
+    console.log('=====================');
+    alert('Check console for API URL debug info');
+  };
+
+  // Test root endpoint (without /api)
+  const testRoot = async () => {
+    try {
+      console.log('Testing root endpoint...');
+      const baseUrl = API_URL.replace('/api', '');
+      const response = await axios.get(`${baseUrl}/test`);
+      console.log('Root test successful:', response.data);
+      alert('Root test successful!');
+    } catch (error) {
+      console.error('Root test failed:', error);
+      alert('Root test failed: ' + error.message);
+    }
+  };
+
   return (
     <Box sx={{ 
       minHeight: '100vh',
@@ -172,6 +198,22 @@ function Login() {
               sx={{ flex: 1 }}
             >
               Test Simple
+            </Button>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+            <Button
+              variant="outlined"
+              onClick={debugApiUrl}
+              sx={{ flex: 1 }}
+            >
+              Debug API URL
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={testRoot}
+              sx={{ flex: 1 }}
+            >
+              Test Root
             </Button>
           </Box>
 
