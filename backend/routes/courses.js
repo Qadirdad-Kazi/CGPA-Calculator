@@ -3,8 +3,11 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-// same secret used for verifying token
-const JWT_SECRET = 'YOUR_SECRET_KEY_HERE';
+// same secret used for verifying token (must be set via environment)
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.error('JWT_SECRET is not set in courses route. Authentication will fail.');
+}
 
 // Middleware to verify token
 function authMiddleware(req, res, next) {
