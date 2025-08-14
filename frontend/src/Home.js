@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Button, Container, Grid, Paper, Card, CardContent } from '@mui/material';
+import { Box, Typography, Button, Container, Grid, Card, CardContent } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { School, Calculate, TrendingUp, Person } from '@mui/icons-material';
 
@@ -35,7 +35,7 @@ function Home() {
       <Container maxWidth="lg">
         <Box sx={{ 
           textAlign: 'center', 
-          py: 8,
+          py: 12,
           color: 'white'
         }}>
           <Typography variant="h2" component="h1" sx={{ 
@@ -46,7 +46,7 @@ function Home() {
             CGPA Calculator
           </Typography>
           <Typography variant="h5" sx={{ 
-            mb: 4, 
+            mb: 6, 
             opacity: 0.9,
             maxWidth: 600,
             mx: 'auto'
@@ -57,13 +57,17 @@ function Home() {
             <Button 
               variant="contained" 
               size="large"
-              onClick={() => navigate('/login')}
+              onClick={() => navigate('/register')}
               sx={{ 
                 bgcolor: 'white', 
                 color: '#667eea',
                 '&:hover': { bgcolor: '#f5f5f5' },
-                px: 4,
-                py: 1.5
+                px: 6,
+                py: 2,
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                borderRadius: 2,
+                textTransform: 'none'
               }}
             >
               Get Started
@@ -76,8 +80,12 @@ function Home() {
                 borderColor: 'white', 
                 color: 'white',
                 '&:hover': { borderColor: 'white', bgcolor: 'rgba(255,255,255,0.1)' },
-                px: 4,
-                py: 1.5
+                px: 6,
+                py: 2,
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                borderRadius: 2,
+                textTransform: 'none'
               }}
             >
               Learn More
@@ -86,10 +94,10 @@ function Home() {
         </Box>
 
         {/* Features Section */}
-        <Box sx={{ py: 6 }}>
+        <Box sx={{ py: 8 }}>
           <Typography variant="h3" component="h2" sx={{ 
             textAlign: 'center', 
-            mb: 6, 
+            mb: 8, 
             color: 'white',
             fontWeight: 'bold'
           }}>
@@ -125,7 +133,7 @@ function Home() {
         {/* CTA Section */}
         <Box sx={{ 
           textAlign: 'center', 
-          py: 6,
+          py: 8,
           color: 'white'
         }}>
           <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
@@ -144,7 +152,10 @@ function Home() {
               '&:hover': { bgcolor: '#f5f5f5' },
               px: 6,
               py: 2,
-              fontSize: '1.1rem'
+              fontSize: '1.1rem',
+              fontWeight: 'bold',
+              borderRadius: 2,
+              textTransform: 'none'
             }}
           >
             Sign Up Now

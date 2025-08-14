@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box, Typography, Button, Container, Grid, Card, CardContent, Paper, Divider } from '@mui/material';
+import { Box, Typography, Button, Container, Grid, Card, CardContent } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { ArrowBack, School, Calculate, TrendingUp, Security, Support } from '@mui/icons-material';
+import { School, Calculate, TrendingUp, Security, Support } from '@mui/icons-material';
 
 function About() {
   const navigate = useNavigate();
@@ -43,25 +43,18 @@ function About() {
       <Box sx={{ 
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         color: 'white',
-        py: 4
+        py: 8
       }}>
         <Container maxWidth="lg">
-          <Button 
-            startIcon={<ArrowBack />}
-            onClick={() => navigate('/')}
-            sx={{ color: 'white', mb: 2 }}
-          >
-            Back to Home
-          </Button>
           <Typography variant="h2" component="h1" sx={{ 
             fontWeight: 'bold',
-            textAlign: 'center'
+            textAlign: 'center',
+            mb: 2
           }}>
             About CGPA Calculator
           </Typography>
           <Typography variant="h5" sx={{ 
             textAlign: 'center', 
-            mt: 2,
             opacity: 0.9
           }}>
             Empowering students with accurate academic performance tracking
@@ -69,7 +62,7 @@ function About() {
         </Container>
       </Box>
 
-      <Container maxWidth="lg" sx={{ py: 6 }}>
+      <Container maxWidth="lg" sx={{ py: 8 }}>
         {/* Mission Section */}
         <Box sx={{ mb: 8 }}>
           <Typography variant="h3" component="h2" sx={{ 

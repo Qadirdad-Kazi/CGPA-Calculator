@@ -17,8 +17,7 @@ import {
   Lock, 
   Visibility, 
   VisibilityOff, 
-  School,
-  ArrowBack
+  School
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from './config';
@@ -75,20 +74,6 @@ function Login() {
       p: 2
     }}>
       <Container maxWidth="sm">
-        {/* Back to Home Button */}
-        <Box sx={{ mb: 3, textAlign: 'left' }}>
-          <Button 
-            startIcon={<ArrowBack />}
-            onClick={() => navigate('/')}
-            sx={{ 
-              color: 'white',
-              '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' }
-            }}
-          >
-            Back to Home
-          </Button>
-        </Box>
-
         {/* Login Card */}
         <Paper elevation={24} sx={{ 
           p: 4,

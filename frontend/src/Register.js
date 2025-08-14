@@ -17,8 +17,6 @@ import {
   Lock, 
   Visibility, 
   VisibilityOff, 
-  School,
-  ArrowBack,
   PersonAdd
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -92,20 +90,6 @@ function Register() {
       p: 2
     }}>
       <Container maxWidth="sm">
-        {/* Back to Home Button */}
-        <Box sx={{ mb: 3, textAlign: 'left' }}>
-          <Button 
-            startIcon={<ArrowBack />}
-            onClick={() => navigate('/')}
-            sx={{ 
-              color: 'white',
-              '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' }
-            }}
-          >
-            Back to Home
-          </Button>
-        </Box>
-
         {/* Register Card */}
         <Paper elevation={24} sx={{ 
           p: 4,
