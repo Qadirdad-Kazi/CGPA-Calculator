@@ -425,7 +425,7 @@ function Dashboard() {
                   </Box>
                   <Box sx={{ mb: 2 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                      <Typography variant="body2">Needs Improvement (<2.0)</Typography>
+                      <Typography variant="body2">Needs Improvement (&lt;2.0)</Typography>
                       <Typography variant="body2" color="error">
                         {dashboardStats.needsImprovement} courses
                       </Typography>
