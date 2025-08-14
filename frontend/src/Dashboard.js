@@ -9,7 +9,6 @@ import {
   TextField,
   Button,
   Grid,
-  Paper,
   IconButton,
   Chip,
   Alert,
@@ -19,28 +18,20 @@ import {
   Avatar,
   List,
   ListItem,
-  ListItemText,
   ListItemSecondaryAction,
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem
+  DialogActions
 } from '@mui/material';
 import {
   Add as AddIcon,
   Delete as DeleteIcon,
-  Edit as EditIcon,
   School as SchoolIcon,
   TrendingUp as TrendingUpIcon,
   Grade as GradeIcon,
   Schedule as ScheduleIcon,
-  CheckCircle as CheckCircleIcon,
-  Warning as WarningIcon,
-  Info as InfoIcon
+  
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from './config';
@@ -51,11 +42,11 @@ function Dashboard() {
   const [courseName, setCourseName] = useState('');
   const [creditHours, setCreditHours] = useState('');
   const [gpa, setGpa] = useState('');
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const token = localStorage.getItem('token');
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [addCourseDialog, setAddCourseDialog] = useState(false);
-  const [editingCourse, setEditingCourse] = useState(null);
+  // const [editingCourse, setEditingCourse] = useState(null);
 
   // Redirect to login if no token
   useEffect(() => {
@@ -213,12 +204,12 @@ function Dashboard() {
     return 'Needs Improvement';
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('email');
-    setToken(null);
-    navigate('/');
-  };
+  // const handleLogout = () => {
+  //   localStorage.removeItem('token');
+  //   localStorage.removeItem('email');
+  //   setToken(null);
+  //   navigate('/');
+  // };
 
   if (!token) return null;
 
