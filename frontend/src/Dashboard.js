@@ -59,7 +59,7 @@ function Dashboard() {
   const fetchCourses = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${API_URL}/courses`, {
+      const res = await axios.get(`${API_URL}/api/courses`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCourses(res.data.courses || []);
