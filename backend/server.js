@@ -8,12 +8,30 @@ const coursesRoutes = require('./routes/courses');
 
 const app = express();
 
-// ✅ Fix CORS issue to allow frontend requests
+// ✅ CORS: allow production, preview, and local frontends
+const allowlist = [
+  'http://localhost:3000',
+  'https://kazicgpacalculator.netlify.app', // Netlify prod
+  'https://cgpa.qadirdadkazi.com'           // Custom domain
+];
+const netlifyPreviewRegex = /^https?:\/\/[a-z0-9-]+--kazicgpacalculator\.netlify\.app$/;
+
 app.use(cors({
-  origin: "https://cgpa.qadirdadkazi.com",  // Replace with actual Netlify URL
-  methods: "GET,POST,PUT,DELETE",
-  credentials: true
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // allow non-browser tools
+    if (allowlist.includes(origin) || netlifyPreviewRegex.test(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 200,
 }));
+
+// Ensure preflight requests are handled
+app.options('*', cors());
 
 app.use(express.json());
 
