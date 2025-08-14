@@ -37,6 +37,12 @@ app.options('*', cors());
 
 app.use(express.json());
 
+// Debug middleware to log requests
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path} - Origin: ${req.headers.origin}`);
+  next();
+});
+
 // Mount your routes
 app.use('/api/auth', authRoutes);
 app.use('/api/courses', coursesRoutes);
