@@ -11,17 +11,24 @@ if (!JWT_SECRET) {
 
 // Middleware to verify token
 function authMiddleware(req, res, next) {
+  console.log('Auth middleware called for:', req.method, req.path);
+  console.log('Authorization header:', req.headers.authorization);
+  
   const authHeader = req.headers.authorization;
   if (!authHeader) {
+    console.log('No authorization header found');
     return res.status(401).json({ message: 'No token provided' });
   }
 
   const token = authHeader.split(' ')[1]; // "Bearer <token>"
+  console.log('Token extracted:', token ? 'present' : 'missing');
 
   jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
+      console.log('Token verification failed:', err.message);
       return res.status(401).json({ message: 'Invalid token' });
     }
+    console.log('Token verified successfully for user:', decoded.userId);
     req.userId = decoded.userId;
     next();
   });
