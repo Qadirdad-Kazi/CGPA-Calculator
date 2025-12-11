@@ -1,7 +1,7 @@
 // Test script for User Registration
 // Usage: node "Test cases/registration_test.js"
 
-const baseUrl = 'http://localhost:5000/api/auth';
+const baseUrl = 'http://localhost:5001/api/auth';
 
 async function testRegistration() {
     const timestamp = Date.now();
