@@ -137,3 +137,11 @@ mongoose
 
 // ✅ Export the app for Vercel deployment
 module.exports = app;
+
+// ✅ Listen if run locally
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
