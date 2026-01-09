@@ -1,5 +1,4 @@
 
-// Test script for Load Testing (Using native fetch)
 
 // Test script for Load Testing
 // Usage: node "Test cases/load_test.js" [duration_in_minutes]

@@ -1,4 +1,3 @@
-// Test script for Adding Courses
 // Usage: node "Test cases/add_course_test.js"
 
 const baseUrl = 'http://localhost:5001/api';
@@ -66,7 +65,6 @@ async function testAddCourse() {
             process.exit(1);
         }
 
-        // 1.1 Verify Course was actually saved (Optional but good)
         const getResponse = await fetch(`${baseUrl}/courses`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -81,7 +79,6 @@ async function testAddCourse() {
         }
 
 
-        // 2. Negative Test: Missing Fields
         console.log('\n[Step 2] Testing Missing Fields (Negative Test)...');
         const incompleteData = { courseName: 'Incomplete Course' }; // Missing credits/grade
 
@@ -103,7 +100,6 @@ async function testAddCourse() {
         }
 
 
-        // 3. Negative Test: No Auth Token
         console.log('\n[Step 3] Testing Missing Auth Token (Negative Test)...');
         const noAuthResponse = await fetch(`${baseUrl}/courses`, {
             method: 'POST',

@@ -1,16 +1,12 @@
 
-//node "Test cases/run_all_tests.js"
+    //node "Test cases/run_all_tests.js"
 const { spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-// Configuration
 const TEST_DIR = __dirname;
 const NODE_CMD = 'node';
 
-// List of test files to run
-// Order matters if there are dependencies, but these seem mostly independent 
-// (though some create data that others might see, but usually they use unique IDs or clean up/ignore)
 const testFiles = [
     { name: 'Unit / Whitebox Test', file: 'whitebox_test.js' },
     { name: 'Registration Module', file: 'registration_test.js' },
@@ -22,7 +18,6 @@ const testFiles = [
     { name: 'Load Performance Test', file: 'load_test.js', args: ['0.2'] } // Run for 0.2 minutes (12s) to be quick
 ];
 
-// Statistics
 const results = [];
 
 async function runTest(test) {
@@ -36,12 +31,9 @@ async function runTest(test) {
 
         const child = spawn(NODE_CMD, [path.join(TEST_DIR, test.file), ...args], {
             cwd: path.join(TEST_DIR, '..'), // Run from root or parent dir if needed? 
-            // The individual scripts usually expect to be run from root or handle their own logic. 
-            // Looking at previous `node "Test cases/..."` calls, CWD was root.
             env: { ...process.env } // Pass current env
         });
 
-        // Pipe output to console so user sees progress
         child.stdout.on('data', (data) => process.stdout.write(data));
         child.stderr.on('data', (data) => process.stderr.write(data));
 
@@ -124,5 +116,4 @@ function printSummary() {
     }
 }
 
-// Start
 runAll();

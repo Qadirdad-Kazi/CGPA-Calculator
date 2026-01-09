@@ -1,4 +1,3 @@
-// Test script for Getting/listing Courses
 // Usage: node "Test cases/get_courses_test.js"
 
 const baseUrl = 'http://localhost:5001/api';

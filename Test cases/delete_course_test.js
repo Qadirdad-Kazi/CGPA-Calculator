@@ -1,4 +1,3 @@
-// Test script for Deleting Courses
 // Usage: node "Test cases/delete_course_test.js"
 
 const baseUrl = 'http://localhost:5001/api';
