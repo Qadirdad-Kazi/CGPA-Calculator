@@ -10,6 +10,7 @@ import {
   Drawer,
   List,
   ListItem,
+  ListItemButton,
   ListItemText,
   ListItemIcon,
   useTheme,
@@ -93,58 +94,58 @@ function Navbar() {
       <Divider />
       <List>
         {navItems.map((item) => (
-          <ListItem 
-            key={item.name} 
-            button 
-            onClick={() => {
-              navigate(item.path);
-              setMobileOpen(false);
-            }}
-            sx={{
-              bgcolor: location.pathname === item.path ? 'rgba(102, 126, 234, 0.1)' : 'transparent',
-              '&:hover': {
-                bgcolor: 'rgba(102, 126, 234, 0.05)',
-              }
-            }}
-          >
-            <ListItemIcon sx={{ color: '#667eea' }}>
-              {item.icon}
-            </ListItemIcon>
-            <ListItemText 
-              primary={item.name} 
-              sx={{ 
-                color: location.pathname === item.path ? '#667eea' : 'inherit',
-                fontWeight: location.pathname === item.path ? 'bold' : 'normal'
+          <ListItem key={item.name} disablePadding>
+            <ListItemButton
+              onClick={() => {
+                navigate(item.path);
+                setMobileOpen(false);
               }}
-            />
+              sx={{
+                bgcolor: location.pathname === item.path ? 'rgba(102, 126, 234, 0.1)' : 'transparent',
+                '&:hover': {
+                  bgcolor: 'rgba(102, 126, 234, 0.05)',
+                }
+              }}
+            >
+              <ListItemIcon sx={{ color: '#667eea' }}>
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText 
+                primary={item.name} 
+                sx={{ 
+                  color: location.pathname === item.path ? '#667eea' : 'inherit',
+                  fontWeight: location.pathname === item.path ? 'bold' : 'normal'
+                }}
+              />
+            </ListItemButton>
           </ListItem>
         ))}
         <Divider />
         {authItems.map((item) => (
-          <ListItem 
-            key={item.name} 
-            button 
-            onClick={() => {
-              navigate(item.path);
-              setMobileOpen(false);
-            }}
-            sx={{
-              bgcolor: location.pathname === item.path ? 'rgba(102, 126, 234, 0.1)' : 'transparent',
-              '&:hover': {
-                bgcolor: 'rgba(102, 126, 234, 0.05)',
-              }
-            }}
-          >
-            <ListItemIcon sx={{ color: '#667eea' }}>
-              {item.icon}
-            </ListItemIcon>
-            <ListItemText 
-              primary={item.name} 
-              sx={{ 
-                color: location.pathname === item.path ? '#667eea' : 'inherit',
-                fontWeight: location.pathname === item.path ? 'bold' : 'normal'
+          <ListItem key={item.name} disablePadding>
+            <ListItemButton
+              onClick={() => {
+                navigate(item.path);
+                setMobileOpen(false);
               }}
-            />
+              sx={{
+                bgcolor: location.pathname === item.path ? 'rgba(102, 126, 234, 0.1)' : 'transparent',
+                '&:hover': {
+                  bgcolor: 'rgba(102, 126, 234, 0.05)',
+                }
+              }}
+            >
+              <ListItemIcon sx={{ color: '#667eea' }}>
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText 
+                primary={item.name} 
+                sx={{ 
+                  color: location.pathname === item.path ? '#667eea' : 'inherit',
+                  fontWeight: location.pathname === item.path ? 'bold' : 'normal'
+                }}
+              />
+            </ListItemButton>
           </ListItem>
         ))}
       </List>
